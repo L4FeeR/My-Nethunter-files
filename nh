@@ -1,0 +1,5 @@
+#!/data/data/com.termux/files/usr/bin/bash
+clear
+echo "Running Kali Nethunter On Termux..."
+sleep 2
+PREFIX=/usr TMPDIR=/tmp su -c /data/data/com.offsec.nethunter/files/scripts/bootkali
