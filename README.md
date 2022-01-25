@@ -10,3 +10,4 @@ kernel   -  ```Which give your kernel Name And Version.```
 
 bootpartition  -  ```Must Run On Androidsu, which gives output of the boot partitions.```
 
+Death          -   ```Wifi death tool.```
