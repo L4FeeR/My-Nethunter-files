@@ -1,0 +1,25 @@
+import os, sys, time
+
+def do(a):
+    os.system("patch -p1 < "+a)
+    print("")
+    print("")
+    print("")
+    time.sleep(1.5)
+
+do("bluetooth.patch")
+do("kali-oldcam.patch")
+do("rtl8814au.patch")
+do("merge-commit-1-rtl.patch")
+do("rtl88812.patch")
+do("cast-to-u8.patch")
+do("neternel-confif.patch")
+do("rtl888eus-merge-1.patch")
+do("fix-athk9.patch")
+do("rtl888eus1.patch")
+do("header-fix.patch")
+do("rndis.patch")
+do("rtl8xxx-fix-compile-error.patch")
+do("injection.patch")
+do("rtl8814.patch")
+do("staging-rtl8xxx.patch")
