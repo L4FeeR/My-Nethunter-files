@@ -1,0 +1,159 @@
+From 2e45789d1d90af6f38c76efaebfd704e4feab7dc Mon Sep 17 00:00:00 2001
+From: MrRob0-X <hanya8493@gmail.com>
+Date: Mon, 22 Nov 2021 15:36:15 +0000
+Subject: [PATCH] Staging: rtl8188eus, rtl8812au, rtl8814au: Fix compilation
+ error
+
+---
+ .../hal/phydm/halrf/halrf_features.h          |  2 +-
+ .../rtl8188eus/hal/phydm/halrf/halrf_kfree.h  |  2 +-
+ .../rtl8188eus/os_dep/linux/ioctl_cfg80211.c  | 23 +------------------
+ drivers/staging/rtl8812au/Makefile            |  2 +-
+ .../rtl8812au/os_dep/linux/ioctl_cfg80211.c   | 21 -----------------
+ .../rtl8814au/os_dep/linux/ioctl_cfg80211.c   | 21 -----------------
+ 6 files changed, 4 insertions(+), 67 deletions(-)
+
+diff --git a/drivers/staging/rtl8188eus/hal/phydm/halrf/halrf_features.h b/drivers/staging/rtl8188eus/hal/phydm/halrf/halrf_features.h
+index c6ef3e6146b2..b8379c0c583d 100644
+--- a/drivers/staging/rtl8188eus/hal/phydm/halrf/halrf_features.h
++++ b/drivers/staging/rtl8188eus/hal/phydm/halrf/halrf_features.h
+@@ -24,7 +24,7 @@
+  *****************************************************************************/
+ 
+ #ifndef	__HALRF_FEATURES_H__
+-#define __HALRF_FEATURES
++#define __HALRF_FEATURES_H__
+ 
+ #if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
+ 
+diff --git a/drivers/staging/rtl8188eus/hal/phydm/halrf/halrf_kfree.h b/drivers/staging/rtl8188eus/hal/phydm/halrf/halrf_kfree.h
+index a5159d1ae813..f742e5bbb51f 100644
+--- a/drivers/staging/rtl8188eus/hal/phydm/halrf/halrf_kfree.h
++++ b/drivers/staging/rtl8188eus/hal/phydm/halrf/halrf_kfree.h
+@@ -25,7 +25,7 @@
+ 
+ 
+ #ifndef	__PHYDMKFREE_H__
+-#define    __PHYDKFREE_H__
++#define __PHYDMKFREE_H__
+ 
+ #define KFREE_VERSION	"1.0"
+ 
+diff --git a/drivers/staging/rtl8188eus/os_dep/linux/ioctl_cfg80211.c b/drivers/staging/rtl8188eus/os_dep/linux/ioctl_cfg80211.c
+index 86c45b98db6d..66dd4672e157 100644
+--- a/drivers/staging/rtl8188eus/os_dep/linux/ioctl_cfg80211.c
++++ b/drivers/staging/rtl8188eus/os_dep/linux/ioctl_cfg80211.c
+@@ -1090,7 +1090,7 @@ void rtw_cfg80211_indicate_connect(_adapter *padapter)
+ 		struct ieee80211_channel *notify_channel;
+ 		u32 freq;
+ 		u16 channel = cur_network->network.Configuration.DSConfig;
+-#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 12, 0) || defined(RHEL79))
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 12, 0))
+ 		struct cfg80211_roam_info roam_info;
+ #endif
+ 
+@@ -1098,27 +1098,6 @@ void rtw_cfg80211_indicate_connect(_adapter *padapter)
+ 		notify_channel = ieee80211_get_channel(wiphy, freq);
+ 		#endif
+ 
+-		#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 12, 0) || defined(RHEL79))
+-		roam_info.bssid = cur_network->network.MacAddress;
+-		roam_info.req_ie = pmlmepriv->assoc_req + sizeof(struct rtw_ieee80211_hdr_3addr) + 2;
+-		roam_info.req_ie_len = pmlmepriv->assoc_req_len - sizeof(struct rtw_ieee80211_hdr_3addr) - 2;
+-		roam_info.resp_ie = pmlmepriv->assoc_rsp + sizeof(struct rtw_ieee80211_hdr_3addr) + 6;
+-		roam_info.resp_ie_len = pmlmepriv->assoc_rsp_len - sizeof(struct rtw_ieee80211_hdr_3addr) - 6;
+-
+-		cfg80211_roamed(padapter->pnetdev, &roam_info, GFP_ATOMIC);
+-		#else
+-		cfg80211_roamed(padapter->pnetdev
+-			#if LINUX_VERSION_CODE > KERNEL_VERSION(2, 6, 39) || defined(COMPAT_KERNEL_RELEASE)
+-			, notify_channel
+-			#endif
+-			, cur_network->network.MacAddress
+-			, pmlmepriv->assoc_req + sizeof(struct rtw_ieee80211_hdr_3addr) + 2
+-			, pmlmepriv->assoc_req_len - sizeof(struct rtw_ieee80211_hdr_3addr) - 2
+-			, pmlmepriv->assoc_rsp + sizeof(struct rtw_ieee80211_hdr_3addr) + 6
+-			, pmlmepriv->assoc_rsp_len - sizeof(struct rtw_ieee80211_hdr_3addr) - 6
+-			, GFP_ATOMIC);
+-		#endif /*LINUX_VERSION_CODE >= KERNEL_VERSION(4, 12, 0)*/
+-
+ 		RTW_INFO(FUNC_ADPT_FMT" call cfg80211_roamed\n", FUNC_ADPT_ARG(padapter));
+ 
+ #ifdef CONFIG_RTW_80211R
+diff --git a/drivers/staging/rtl8812au/Makefile b/drivers/staging/rtl8812au/Makefile
+index ea3f603b7594..3452959aa31c 100755
+--- a/drivers/staging/rtl8812au/Makefile
++++ b/drivers/staging/rtl8812au/Makefile
+@@ -5,7 +5,7 @@ EXTRA_CFLAGS += -Wno-unused-variable
+ EXTRA_CFLAGS += -Wno-unused-label
+ #EXTRA_CFLAGS += -Wno-unused-parameter
+ EXTRA_CFLAGS += -Wno-unused-function
+-EXTRA_CFLAGS += -Wimplicit-fallthrough=0
++#EXTRA_CFLAGS += -Wimplicit-fallthrough
+ #EXTRA_CFLAGS += -Wno-parentheses-equality
+ #EXTRA_CFLAGS += -Wno-pointer-bool-conversion
+ EXTRA_CFLAGS += -Wno-unknown-pragmas
+diff --git a/drivers/staging/rtl8812au/os_dep/linux/ioctl_cfg80211.c b/drivers/staging/rtl8812au/os_dep/linux/ioctl_cfg80211.c
+index e9f4ba93648e..fc949010895d 100644
+--- a/drivers/staging/rtl8812au/os_dep/linux/ioctl_cfg80211.c
++++ b/drivers/staging/rtl8812au/os_dep/linux/ioctl_cfg80211.c
+@@ -1144,27 +1144,6 @@ void rtw_cfg80211_indicate_connect(_adapter *padapter)
+ 		notify_channel = ieee80211_get_channel(wiphy, freq);
+ 		#endif
+ 
+-		#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 12, 0)
+-		roam_info.bssid = cur_network->network.MacAddress;
+-		roam_info.req_ie = pmlmepriv->assoc_req + sizeof(struct rtw_ieee80211_hdr_3addr) + 2;
+-		roam_info.req_ie_len = pmlmepriv->assoc_req_len - sizeof(struct rtw_ieee80211_hdr_3addr) - 2;
+-		roam_info.resp_ie = pmlmepriv->assoc_rsp + sizeof(struct rtw_ieee80211_hdr_3addr) + 6;
+-		roam_info.resp_ie_len = pmlmepriv->assoc_rsp_len - sizeof(struct rtw_ieee80211_hdr_3addr) - 6;
+-
+-		cfg80211_roamed(padapter->pnetdev, &roam_info, GFP_ATOMIC);
+-		#else
+-		cfg80211_roamed(padapter->pnetdev
+-			#if LINUX_VERSION_CODE > KERNEL_VERSION(2, 6, 39) || defined(COMPAT_KERNEL_RELEASE)
+-			, notify_channel
+-			#endif
+-			, cur_network->network.MacAddress
+-			, pmlmepriv->assoc_req + sizeof(struct rtw_ieee80211_hdr_3addr) + 2
+-			, pmlmepriv->assoc_req_len - sizeof(struct rtw_ieee80211_hdr_3addr) - 2
+-			, pmlmepriv->assoc_rsp + sizeof(struct rtw_ieee80211_hdr_3addr) + 6
+-			, pmlmepriv->assoc_rsp_len - sizeof(struct rtw_ieee80211_hdr_3addr) - 6
+-			, GFP_ATOMIC);
+-		#endif /*LINUX_VERSION_CODE >= KERNEL_VERSION(4, 12, 0)*/
+-
+ 		RTW_INFO(FUNC_ADPT_FMT" call cfg80211_roamed\n", FUNC_ADPT_ARG(padapter));
+ 
+ #ifdef CONFIG_RTW_80211R
+diff --git a/drivers/staging/rtl8814au/os_dep/linux/ioctl_cfg80211.c b/drivers/staging/rtl8814au/os_dep/linux/ioctl_cfg80211.c
+index 84fe9e68c456..c71df61ff3b6 100755
+--- a/drivers/staging/rtl8814au/os_dep/linux/ioctl_cfg80211.c
++++ b/drivers/staging/rtl8814au/os_dep/linux/ioctl_cfg80211.c
+@@ -1143,27 +1143,6 @@ void rtw_cfg80211_indicate_connect(_adapter *padapter)
+ 		notify_channel = ieee80211_get_channel(wiphy, freq);
+ 		#endif
+ 
+-		#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 12, 0)
+-		roam_info.bssid = cur_network->network.MacAddress;
+-		roam_info.req_ie = pmlmepriv->assoc_req + sizeof(struct rtw_ieee80211_hdr_3addr) + 2;
+-		roam_info.req_ie_len = pmlmepriv->assoc_req_len - sizeof(struct rtw_ieee80211_hdr_3addr) - 2;
+-		roam_info.resp_ie = pmlmepriv->assoc_rsp + sizeof(struct rtw_ieee80211_hdr_3addr) + 6;
+-		roam_info.resp_ie_len = pmlmepriv->assoc_rsp_len - sizeof(struct rtw_ieee80211_hdr_3addr) - 6;
+-
+-		cfg80211_roamed(padapter->pnetdev, &roam_info, GFP_ATOMIC);
+-		#else
+-		cfg80211_roamed(padapter->pnetdev
+-			#if LINUX_VERSION_CODE > KERNEL_VERSION(2, 6, 39) || defined(COMPAT_KERNEL_RELEASE)
+-			, notify_channel
+-			#endif
+-			, cur_network->network.MacAddress
+-			, pmlmepriv->assoc_req + sizeof(struct rtw_ieee80211_hdr_3addr) + 2
+-			, pmlmepriv->assoc_req_len - sizeof(struct rtw_ieee80211_hdr_3addr) - 2
+-			, pmlmepriv->assoc_rsp + sizeof(struct rtw_ieee80211_hdr_3addr) + 6
+-			, pmlmepriv->assoc_rsp_len - sizeof(struct rtw_ieee80211_hdr_3addr) - 6
+-			, GFP_ATOMIC);
+-		#endif /*LINUX_VERSION_CODE >= KERNEL_VERSION(4, 12, 0)*/
+-
+ 		RTW_INFO(FUNC_ADPT_FMT" call cfg80211_roamed\n", FUNC_ADPT_ARG(padapter));
+ 
+ #ifdef CONFIG_RTW_80211R

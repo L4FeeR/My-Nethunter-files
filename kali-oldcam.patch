@@ -1,0 +1,22 @@
+From 0d5b149ca4c476e980bebc827453bdbebb1bba94 Mon Sep 17 00:00:00 2001
+From: MrRob0-X <hanya8493@gmail.com>
+Date: Mon, 22 Nov 2021 18:34:30 +0000
+Subject: [PATCH] Ci: kali-oldcam Config
+
+---
+ kramel-build.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kramel-build.sh b/kramel-build.sh
+index 0805cc8ce6a5..de98e72a7f89 100644
+--- a/kramel-build.sh
++++ b/kramel-build.sh
+@@ -64,7 +64,7 @@ DEVICE="tulip"
+ 
+ # The defconfig which should be used. Get it from config.gz from
+ # your device or check source
+-DEFCONFIG=kali-newcam_defconfig
++DEFCONFIG=kali-oldcam_defconfig
+ 
+ # Build modules. 0 = NO | 1 = YES
+ MODULES=1
